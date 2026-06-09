@@ -14,11 +14,21 @@ const app = express();
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("MAIL ERROR:", error);
+  } else {
+    console.log("MAIL SERVER READY");
+  }
 });
 
 
