@@ -1,6 +1,7 @@
 
 require("dotenv").config();
 
+
 const askGemini =require("./chatbot");
 
 const jwt = require("jsonwebtoken");
@@ -10,12 +11,16 @@ const cors = require("cors");
 const db = require("./database");
 
 const app = express();
+const nodemailer = require("nodemailer");
 
-const { Resend } = require("resend");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
 
 app.use(cors());
 app.use(express.json());
@@ -242,16 +247,15 @@ app.post("/contact", async (req, res) => {
       message
     } = req.body;
 
-    await resend.emails.send({
+    await transporter.sendMail({
 
-      from:
-        "Bhanwarilal <onboarding@resend.dev>",
+      from: process.env.GMAIL_USER,
 
-      to:
-        process.env.OWNER_EMAIL,
+      to: ["bhanwarilalmithaiwala@gmail.com","bhanwarilal.contact@gmail.com"],
 
-      subject:
-        "New Contact Form",
+      replyTo: email,
+
+      subject: "New Contact Form - Bhanwarilal",
 
       html: `
         <h2>New Contact Form</h2>
