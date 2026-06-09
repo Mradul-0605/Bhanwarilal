@@ -11,7 +11,8 @@ import {
 import {
   FaInstagram,
   FaFacebookF,
-  FaYoutube
+  FaYoutube,
+  FaPinterestP
 } from "react-icons/fa"
 
 function Footer() {
@@ -67,6 +68,12 @@ function Footer() {
             <HashLink smooth to="/#about">
             <li className="hover:text-[#fff8dc] transition duration-300 cursor-pointer">
               About
+            </li>
+            </HashLink>
+
+            <HashLink smooth to="/#contact">
+            <li className="hover:text-[#fff8dc] transition duration-300 cursor-pointer">
+              Contact
             </li>
             </HashLink>
 
@@ -143,11 +150,11 @@ function Footer() {
 
 
 
-            {/* YOUTUBE */}
-            <a href="https://www.youtube.com/watch?v=wU2LJX3qLd4" target="_blank">
+            {/* PINTEREST */}
+            <a href="https://in.pinterest.com/BHANWARILALMITHAIWALA/" target="_blank">
             <div className="p-4 rounded-2xl bg-white/5 border border-[#f7d774]/10 hover:bg-[#f7d774]/10 hover:border-[#f7d774]/40 hover:shadow-[0_0_20px_rgba(247,215,116,0.25)] transition duration-300 cursor-pointer">
 
-              <FaYoutube className="text-[#fff8dc] text-2xl" />
+              <FaPinterestP className="text-[#fff8dc] text-2xl" />
 
             </div></a>
 

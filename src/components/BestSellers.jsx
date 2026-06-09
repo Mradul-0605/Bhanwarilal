@@ -1,128 +1,208 @@
-import laddu from "../assets/laddu.png"
-import makhanbada from "../assets/makhanbada.png"
-import ghevar from "../assets/ghevar.png"
-import feine from "../assets/feine.png"
-import sangam from "../assets/sangam.png"
-import kaju from "../assets/kaju.png"
-import gujiya from "../assets/sweets.png"
-import chena from "../assets/chena.png"
+import { useEffect, useState } from "react";
 
 function BestSellers() {
 
-  const products = [
-    {
-      name: "Laddu",
-      image: laddu,
-    },
+  const [products, setProducts] =
+    useState([]);
 
-    {
-      name: "Makhan Bada",
-      image: makhanbada,
-    },
+  useEffect(() => {
 
-    {
-      name: "Ghevar",
-      image: ghevar,
-    },
+    fetch(
+      "http://localhost:5000/sweets"
+    )
+      .then((res) => res.json())
+      .then((data) => {
 
-    {
-      name: "Feine",
-      image: feine,
-    },
+        const bestSellerNames = [
+          "laddu",
+          "makhan bada",
+          "ghevar",
+          "feine",
+          "sangam barfi",
+          "kaju katli",
+          "gujiya",
+          "chena toast"
+        ];
 
-    {
-      name: "Sangam Barfi",
-      image: sangam,
-    },
+        const filtered =
+          data.filter((item) =>
+            bestSellerNames.includes(
+              item.name
+            )
+          );
 
-    {
-      name: "Kaju Katli",
-      image: kaju,
-    },
+        setProducts(filtered);
 
-    {
-      name: "Gujiya",
-      image: gujiya,
-    },
+      });
 
-    {
-      name: "Chena Toast",
-      image: chena,
-    },
-  ]
-
+  }, []);
 
   return (
 
-    <section id="bestsellers" className="bg-[#fff8ec] py-24 px-10">
+    <section
+      id="bestsellers"
+      className="
+      bg-[#fff8ec]
+      py-16 md:py-24
+      px-4 sm:px-6 lg:px-10
+      "
+    >
 
-      {/* HEADING */}
       <div className="text-center">
 
-        <p className="text-[#b8860b] tracking-[4px] uppercase mb-4 text-lg">
+        <p
+          className="
+          text-[#b8860b]
+          tracking-[4px]
+          uppercase
+          mb-3
+          text-sm md:text-lg
+          "
+        >
           Best Sellers
         </p>
 
-        <h2 className="text-5xl font-bold text-[#2b1a05]">
-
+        <h2
+          className="
+          text-3xl
+          sm:text-4xl
+          md:text-5xl
+          font-bold
+          text-[#2b1a05]
+          "
+        >
           Loved Across Generations
-
         </h2>
 
       </div>
 
+      <div
+        className="
+        mt-12 md:mt-16
+        grid
+        grid-cols-2
+        lg:grid-cols-4
+        gap-4 md:gap-8
+        "
+      >
 
-
-      {/* PRODUCT GRID */}
-      <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-
-        {products.map((product, index) => (
+        {products.map((product) => (
 
           <div
-            key={index}
-            className="group relative h-[300px] rounded-[32px] overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)] transition duration-700"
-            >
+            key={product.id}
+            className="
+            group
+            relative
+            h-[220px]
+            sm:h-[280px]
+            md:h-[320px]
+            rounded-[28px]
+            overflow-hidden
+            shadow-xl
+            transition-all
+            duration-500
+            hover:-translate-y-2
+            hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)]
+            "
+          >
 
-            {/* PRODUCT IMAGE */}
             <img
-                src={product.image}
-                alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700"
+              loading="lazy"
+              src={product.image}
+              alt={product.name}
+              className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+              transition
+              duration-700
+              group-hover:scale-110
+              "
             />
 
+            <div
+              className="
+              absolute
+              inset-0
+              bg-gradient-to-t
+              from-black/80
+              via-black/20
+              to-transparent
+              "
+            />
 
-            {/* DARK GRADIENT OVERLAY */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div
+              className="
+              absolute
+              inset-0
+              rounded-[28px]
+              border
+              border-[#f7d774]/20
+              group-hover:border-[#f7d774]/50
+              transition
+              duration-500
+              "
+            />
 
+            <div
+              className="
+              absolute
+              bottom-4 md:bottom-8
+              left-4 md:left-6
+              z-10
+              "
+            >
 
-            {/* GOLD BORDER GLOW */}
-            <div className="absolute inset-0 rounded-[32px] border border-[#f7d774]/20 group-hover:border-[#f7d774]/50 transition duration-500"></div>
-
-
-            {/* PRODUCT TEXT */}
-            <div className="absolute bottom-8 left-6 z-10">
-
-                <p className="text-[#f7d774] uppercase tracking-[3px] text-sm mb-2">
+              <p
+                className="
+                text-[#f7d774]
+                uppercase
+                tracking-[2px]
+                text-[10px]
+                md:text-sm
+                mb-1 md:mb-2
+                "
+              >
                 Signature Delight
-                </p>
+              </p>
 
-                <h3 className="text-3xl font-bold text-white">
-
+              <h3
+                className="
+                text-lg
+                sm:text-2xl
+                md:text-3xl
+                font-bold
+                text-white
+                "
+              >
                 {product.name}
-
-                </h3>
-
-            </div>
+              </h3>
 
             </div>
+
+            {product.description && (
+                <div className="absolute top-4 right-4 max-w-[240px] bg-gradient-to-br from-[#fff8dc] to-[#fef3c7] border border-[#f7d774] rounded-2xl shadow-[0_10px_30px_rgba(184,134,11,0.25)] px-4 py-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none z-20">
+                  
+                  <div className="flex items-center gap-2 mb-2">
+                    <span>✨</span>
+                    <span className="text-[#b8860b] font-semibold text-sm">
+                      {product.description}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+          </div>
 
         ))}
-
+      
       </div>
 
     </section>
 
-  )
+  );
 }
 
-export default BestSellers
+export default BestSellers;

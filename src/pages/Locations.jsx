@@ -221,6 +221,7 @@ function Locations() {
               <div className="h-[350px] lg:h-full">
 
                 <iframe
+                  loading="lazy"
                   src={store.embed}
                   width="100%"
                   height="100%"

@@ -11,6 +11,12 @@ import Namkeen from "./pages/Namkeen"
 import GiftBoxes from "./pages/GiftBoxes"
 import Locations from "./pages/Locations"
 
+import AdminLogin from "./pages/AdminLogin";
+import Dashboard from "./pages/Dashboard";
+
+import ChatBot from "./components/ChatBot";
+import Contact from "./pages/Contact";
+
 import {
   Routes,
   Route
@@ -26,6 +32,8 @@ function Home() {
       <Categories />
       <BestSellers />
       <About />
+      <Contact />
+      <ChatBot />
       <Footer />
     </>
 
@@ -50,6 +58,9 @@ function App() {
         <Route path="/giftboxes" element={<GiftBoxes />} />
 
         <Route path="/locations" element={<Locations />} />
+
+        <Route path="/owner-login" element={<AdminLogin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
       </Routes>
 

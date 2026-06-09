@@ -61,9 +61,12 @@ function Hero() {
           {/* TEXT */}
           <div className="mt-12 max-w-3xl">
 
-            <p className="text-[#f7d774] tracking-[4px] uppercase mb-4 text-lg">
-              Since 1945
-            </p>
+            <div className="inline-flex items-center gap-3 border border-[#D4A017]/40 px-6 py-3 rounded-full">
+  <span className="w-2 h-2 rounded-full bg-[#D4A017]" />
+  <span className="text-[#D4A017] tracking-[4px]">
+    EST. 1945
+  </span>
+</div>
 
 
             <h1 className="text-5xl font-bold text-white leading-tight">
@@ -125,9 +128,12 @@ function Hero() {
           {/* RIGHT TEXT */}
           <div className="max-w-3xl text-right">
 
-            <p className="text-[#f7d774] text-xl tracking-[4px] uppercase mb-6">
-              Since 1945
-            </p>
+            <div className="inline-flex items-center gap-3 border border-[#D4A017]/40 px-6 py-3 rounded-full">
+  <span className="w-2 h-2 rounded-full bg-[#D4A017]" />
+  <span className="text-[#D4A017] tracking-[4px]">
+    EST. 1945
+  </span>
+</div>
 
 
             <h1 className="text-7xl font-bold text-white leading-tight">
@@ -173,5 +179,6 @@ function Hero() {
 
   )
 }
+
 
 export default Hero

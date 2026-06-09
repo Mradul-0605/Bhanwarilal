@@ -10,13 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/manrope": "^5.2.8",
     "@tailwindcss/vite": "^4.3.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-icons": "^5.6.0",
     "react-router-dom": "^7.15.1",
     "react-router-hash-link": "^2.4.3",
+    "sqlite3": "^6.0.1",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
@@ -29,5 +35,18 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "vite": "^8.0.12"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mradul-0605/Bhanwarilal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mradul-0605/Bhanwarilal/issues"
+  },
+  "homepage": "https://github.com/Mradul-0605/Bhanwarilal#readme"
 }

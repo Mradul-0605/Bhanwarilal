@@ -10,3 +10,7 @@ li,
 .card-hover{
   cursor: pointer;
 }
+
+body{
+  font-family: "Manrope", sans-serif;
+}
