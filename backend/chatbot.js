@@ -17,26 +17,15 @@ new InferenceClient(
 
 let chatHistory = [];
 
-function query(sql, params = []) {
+async function query(sql, params = []) {
 
-  return new Promise(
-    (resolve, reject) => {
+  const result =
+    await db.query(
+      sql,
+      params
+    );
 
-      db.all(
-        sql,
-        params,
-        (err, rows) => {
-
-          if (err)
-            reject(err);
-          else
-            resolve(rows);
-
-        }
-      );
-
-    }
-  );
+  return result.rows;
 
 }
 

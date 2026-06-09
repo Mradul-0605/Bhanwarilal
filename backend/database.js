@@ -1,11 +1,21 @@
-const sqlite3 = require("sqlite3").verbose();
+require("dotenv").config();
 
-const db = new sqlite3.Database("./database.db", (err) => {
-  if (err) {
-    console.log(err.message);
-  } else {
-    console.log("Connected to SQLite");
-  }
+const { Pool } = require("pg");
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-module.exports = db;
+pool
+  .connect()
+  .then(() => {
+    console.log("Connected to PostgreSQL");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+module.exports = pool;

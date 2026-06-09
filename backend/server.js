@@ -25,215 +25,251 @@ const transporter = nodemailer.createTransport({
 app.use(cors());
 app.use(express.json());
 
-db.run(`
-CREATE TABLE IF NOT EXISTS sweets (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
-  original_price INTEGER,
-  current_price INTEGER,
-  mode TEXT,
-  image TEXT
-)
-`);
+(async () => {
 
-db.run(`
-CREATE TABLE IF NOT EXISTS namkeen (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
-  original_price INTEGER,
-  current_price INTEGER,
-  mode TEXT,
-  image TEXT
-)
-`);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS sweets (
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      original_price INTEGER,
+      current_price INTEGER,
+      mode TEXT,
+      image TEXT,
+      description TEXT
+    )
+  `);
 
-db.run(`
-CREATE TABLE IF NOT EXISTS giftboxes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
-  original_price INTEGER,
-  current_price INTEGER,
-  mode TEXT,
-  image TEXT
-)
-`);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS namkeen (
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      original_price INTEGER,
+      current_price INTEGER,
+      mode TEXT,
+      image TEXT,
+      description TEXT
+    )
+  `);
 
-db.run(
-  `ALTER TABLE sweets ADD COLUMN image TEXT`,
-  (err) => {}
-);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS giftboxes (
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      original_price INTEGER,
+      current_price INTEGER,
+      mode TEXT,
+      image TEXT,
+      description TEXT
+    )
+  `);
 
-db.run(
-  `ALTER TABLE sweets ADD COLUMN description TEXT`,
-  () => {}
-);
+  console.log("Tables Ready");
 
-db.run(
-  `ALTER TABLE namkeen ADD COLUMN description TEXT`,
-  () => {}
-);
-
-db.run(
-  `ALTER TABLE giftboxes ADD COLUMN description TEXT`,
-  () => {}
-);
+})();
 
 app.get("/", (req, res) => {
   res.send("Backend Running");
 });
 
-app.get("/sweets", (req, res) => {
-  db.all(
-    "SELECT * FROM sweets",
-    [],
-    (err, rows) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.get("/sweets", async (req, res) => {
 
-      res.json(rows);
-    }
-  );
+  try {
+
+    const result =
+      await db.query(
+        "SELECT * FROM sweets"
+      );
+
+    res.json(result.rows);
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.get("/namkeen", (req, res) => {
-  db.all(
-    "SELECT * FROM namkeen",
-    [],
-    (err, rows) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.get("/namkeen", async (req, res) => {
 
-      res.json(rows);
-    }
-  );
+  try {
+
+    const result =
+      await db.query(
+        "SELECT * FROM namkeen"
+      );
+
+    res.json(result.rows);
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.get("/giftboxes", (req, res) => {
-  db.all(
-    "SELECT * FROM giftboxes",
-    [],
-    (err, rows) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.get("/giftboxes", async (req, res) => {
 
-      res.json(rows);
-    }
-  );
+  try {
+
+    const result =
+      await db.query(
+        "SELECT * FROM giftboxes"
+      );
+
+    res.json(result.rows);
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.post("/sweets", (req, res) => {
-  const { name, price, image, description } = req.body;
+app.post("/sweets", async (req, res) => {
 
-  db.run(
-    `
-    INSERT INTO sweets
-    (
+  try {
+
+    const {
       name,
-      original_price,
-      current_price,
-      mode,
+      price,
       image,
       description
-    )
-    VALUES
-    (?, ?, ?, ?, ?, ?)
-    `,
-    [
-      name,
-      price,
-      price,
-      "price",
-      image,
-      description ||  ""
-    ],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+    } = req.body;
 
-      res.json({
-        success: true
-      });
-    }
-  );
+    await db.query(
+      `
+      INSERT INTO sweets
+      (
+        name,
+        original_price,
+        current_price,
+        mode,
+        image,
+        description
+      )
+      VALUES
+      ($1, $2, $3, $4, $5, $6)
+      `,
+      [
+        name,
+        price,
+        price,
+        "price",
+        image,
+        description || ""
+      ]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.post("/namkeen", (req, res) => {
-  const { name, price, image, description } = req.body;
+app.post("/namkeen", async (req, res) => {
 
-  db.run(
-    `
-    INSERT INTO namkeen
-    (
+  try {
+
+    const {
       name,
-      original_price,
-      current_price,
-      mode,
+      price,
       image,
       description
-    )
-    VALUES
-    (?, ?, ?, ?, ?, ?)
-    `,
-    [
-      name,
-      price,
-      price,
-      "price",
-      image,
-      description || ""
-    ],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+    } = req.body;
 
-      res.json({
-        success: true
-      });
-    }
-  );
+    await db.query(
+      `
+      INSERT INTO namkeen
+      (
+        name,
+        original_price,
+        current_price,
+        mode,
+        image,
+        description
+      )
+      VALUES
+      ($1,$2,$3,$4,$5,$6)
+      `,
+      [
+        name,
+        price,
+        price,
+        "price",
+        image,
+        description || ""
+      ]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
 
-app.post("/giftboxes", (req, res) => {
-  const { name, price, image, description } = req.body;
+app.post("/giftboxes", async (req, res) => {
 
-  db.run(
-    `
-    INSERT INTO giftboxes
-    (
+  try {
+
+    const {
       name,
-      original_price,
-      current_price,
-      mode,
+      price,
       image,
       description
-    )
-    VALUES
-    (?, ?, ?, ?, ?, ?)
-    `,
-    [
-      name,
-      price,
-      price,
-      "price",
-      image,
-      description || ""
-    ],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+    } = req.body;
 
-      res.json({
-        success: true
-      });
-    }
-  );
+    await db.query(
+      `
+      INSERT INTO giftboxes
+      (
+        name,
+        original_price,
+        current_price,
+        mode,
+        image,
+        description
+      )
+      VALUES
+      ($1,$2,$3,$4,$5,$6)
+      `,
+      [
+        name,
+        price,
+        price,
+        "price",
+        image,
+        description || ""
+      ]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
 app.post("/contact", async (req, res) => {
@@ -299,270 +335,275 @@ app.post("/contact", async (req, res) => {
 });
 
 
-app.put("/sweets/:id", (req, res) => {
-  const {
-  current_price,
-  mode,
-  image,
-  description
-} = req.body;
+app.put("/sweets/:id", async (req, res) => {
 
-  let query;
-  let values;
+  try {
 
-  if (mode === "price") {
-
-    query = `
-      UPDATE sweets
-      SET
-        original_price = ?,
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
-
-    values = [
-      current_price,
+    const {
       current_price,
       mode,
       image,
-      description,
-      req.params.id
-    ];
+      description
+    } = req.body;
 
-  } else {
+    if (mode === "price") {
 
-    query = `
-      UPDATE sweets
-      SET
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
+      await db.query(
+        `
+        UPDATE sweets
+        SET
+          original_price = $1,
+          current_price = $2,
+          mode = $3,
+          image = $4,
+          description = $5
+        WHERE id = $6
+        `,
+        [
+          current_price,
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
 
-    values = [
-      current_price,
-      mode,
-      image,
-      description,
-      req.params.id
-    ];
+    } else {
+
+      await db.query(
+        `
+        UPDATE sweets
+        SET
+          current_price = $1,
+          mode = $2,
+          image = $3,
+          description = $4
+        WHERE id = $5
+        `,
+        [
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
+
+    }
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
   }
 
-  db.run(
-    query,
-    values,
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
-
-      res.json({
-        success: true
-      });
-    }
-  );
 });
 
-app.put("/namkeen/:id", (req, res) => {
-  const {
-  current_price,
-  mode,
-  image,
-  description
-} = req.body;
+app.put("/namkeen/:id", async (req, res) => {
 
-  let query;
-  let values;
+  try {
 
-  if (mode === "price") {
-
-    query = `
-      UPDATE namkeen
-      SET
-        original_price = ?,
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
-
-    values = [
-      current_price,
+    const {
       current_price,
       mode,
       image,
-      description,
-      req.params.id
-    ];
+      description
+    } = req.body;
 
-  } else {
+    if (mode === "price") {
 
-    query = `
-      UPDATE namkeen
-      SET
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
+      await db.query(
+        `
+        UPDATE namkeen
+        SET
+          original_price = $1,
+          current_price = $2,
+          mode = $3,
+          image = $4,
+          description = $5
+        WHERE id = $6
+        `,
+        [
+          current_price,
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
 
-    values = [
-      current_price,
-      mode,
-      image,
-      description,
-      req.params.id
-    ];
+    } else {
+
+      await db.query(
+        `
+        UPDATE namkeen
+        SET
+          current_price = $1,
+          mode = $2,
+          image = $3,
+          description = $4
+        WHERE id = $5
+        `,
+        [
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
+
+    }
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
   }
 
-  db.run(
-    query,
-    values,
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
-
-      res.json({
-        success: true
-      });
-    }
-  );
 });
 
-app.put("/giftboxes/:id", (req, res) => {
-  const {
-  current_price,
-  mode,
-  image,
-  description
-} = req.body;
+app.put("/giftboxes/:id", async (req, res) => {
 
-  let query;
-  let values;
+  try {
 
-  if (mode === "price") {
-
-    query = `
-      UPDATE giftboxes
-      SET
-        original_price = ?,
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
-
-    values = [
-      current_price,
+    const {
       current_price,
       mode,
       image,
-      description,
-      req.params.id
-    ];
+      description
+    } = req.body;
 
-  } else {
+    if (mode === "price") {
 
-    query = `
-      UPDATE giftboxes
-      SET
-        current_price = ?,
-        mode = ?,
-        image = ?,
-        description = ?
-      WHERE id = ?
-    `;
+      await db.query(
+        `
+        UPDATE giftboxes
+        SET
+          original_price = $1,
+          current_price = $2,
+          mode = $3,
+          image = $4,
+          description = $5
+        WHERE id = $6
+        `,
+        [
+          current_price,
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
 
-    values = [
-      current_price,
-      mode,
-      image,
-      description,
-      req.params.id
-    ];
+    } else {
+
+      await db.query(
+        `
+        UPDATE giftboxes
+        SET
+          current_price = $1,
+          mode = $2,
+          image = $3,
+          description = $4
+        WHERE id = $5
+        `,
+        [
+          current_price,
+          mode,
+          image,
+          description,
+          req.params.id
+        ]
+      );
+
+    }
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
   }
 
-  db.run(
-    query,
-    values,
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
-
-      res.json({
-        success: true
-      });
-    }
-  );
 });
 
-app.delete("/sweets/:id", (req, res) => {
-  db.run(
-    `
-    DELETE FROM sweets
-    WHERE id = ?
-    `,
-    [req.params.id],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.delete("/sweets/:id", async (req, res) => {
 
-      res.json({
-        success: true
-      });
-    }
-  );
+  try {
+
+    await db.query(
+      "DELETE FROM sweets WHERE id = $1",
+      [req.params.id]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.delete("/namkeen/:id", (req, res) => {
-  db.run(
-    `
-    DELETE FROM namkeen
-    WHERE id = ?
-    `,
-    [req.params.id],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.delete("/namkeen/:id", async (req, res) => {
 
-      res.json({
-        success: true
-      });
-    }
-  );
+  try {
+
+    await db.query(
+      "DELETE FROM namkeen WHERE id = $1",
+      [req.params.id]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
 
-app.delete("/giftboxes/:id", (req, res) => {
-  db.run(
-    `
-    DELETE FROM giftboxes
-    WHERE id = ?
-    `,
-    [req.params.id],
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
+app.delete("/giftboxes/:id", async (req, res) => {
 
-      res.json({
-        success: true
-      });
-    }
-  );
+  try {
+
+    await db.query(
+      "DELETE FROM giftboxes WHERE id = $1",
+      [req.params.id]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
 });
-
 app.post("/login", (req, res) => {
 
   const { password } = req.body;
@@ -630,15 +671,23 @@ app.get("/test-chat", async (req, res) => {
 
 });
 
-app.get("/fix-images", (req, res) => {
+app.get("/fix-images", async (req, res) => {
 
-  db.run(`
-    UPDATE sweets
-    SET image = LOWER(name) || '.png'
-    WHERE image IS NULL
-  `);
+  try {
 
-  res.send("Images Fixed");
+    await db.query(`
+      UPDATE sweets
+      SET image = LOWER(name) || '.png'
+      WHERE image IS NULL
+    `);
+
+    res.send("Images Fixed");
+
+  } catch (error) {
+
+    res.status(500).send(error.message);
+
+  }
 
 });
 
