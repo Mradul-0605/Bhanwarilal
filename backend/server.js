@@ -11,25 +11,12 @@ const cors = require("cors");
 const db = require("./database");
 
 const app = express();
-const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const { Resend } = require("resend");
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("MAIL ERROR:", error);
-  } else {
-    console.log("MAIL SERVER READY");
-  }
-});
+const resend = new Resend(
+  process.env.RESEND_API_KEY
+);
 
 
 app.use(cors());
@@ -293,40 +280,31 @@ app.post("/contact", async (req, res) => {
       message
     } = req.body;
 
-    await transporter.sendMail({
+    const result =
+      await resend.emails.send({
 
-      from: process.env.GMAIL_USER,
+        from: "onboarding@resend.dev",
 
-      to: ["bhanwarilalmithaiwala@gmail.com","bhanwarilal.contact@gmail.com"],
+        to: "mradulsomanii@gmail.com",
 
-      replyTo: email,
+        replyTo: email,
 
-      subject: "New Contact Form - Bhanwarilal",
+        subject: "New Contact Form - Bhanwarilal",
 
-      html: `
-        <h2>New Contact Form</h2>
+        html: `
+          <h2>New Contact Form</h2>
 
-        <p>
-          <strong>Name:</strong>
-          ${name}
-        </p>
+          <p><strong>Name:</strong> ${name}</p>
 
-        <p>
-          <strong>Phone:</strong>
-          ${phone}
-        </p>
+          <p><strong>Phone:</strong> ${phone}</p>
 
-        <p>
-          <strong>Email:</strong>
-          ${email}
-        </p>
+          <p><strong>Email:</strong> ${email}</p>
 
-        <p>
-          <strong>Message:</strong>
-          ${message}
-        </p>
-      `
-    });
+          <p><strong>Message:</strong> ${message}</p>
+        `
+      });
+
+    console.log(result);
 
     res.json({
       success: true
@@ -711,6 +689,7 @@ app.get("/chat-test/:message", async (req, res) => {
   res.send(reply);
 
 });
+
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");
