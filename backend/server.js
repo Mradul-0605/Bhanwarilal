@@ -22,6 +22,35 @@ const resend = new Resend(
 app.use(cors());
 app.use(express.json());
 
+const authorizeAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized"
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!payload || !payload.admin) {
+      throw new Error("Invalid token payload");
+    }
+
+    req.admin = payload;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token"
+    });
+  }
+};
+
 (async () => {
 
   await db.query(`
@@ -125,7 +154,7 @@ app.get("/giftboxes", async (req, res) => {
 
 });
 
-app.post("/sweets", async (req, res) => {
+app.post("/sweets", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -174,7 +203,7 @@ app.post("/sweets", async (req, res) => {
 
 });
 
-app.post("/namkeen", async (req, res) => {
+app.post("/namkeen", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -222,7 +251,7 @@ app.post("/namkeen", async (req, res) => {
 });
 
 
-app.post("/giftboxes", async (req, res) => {
+app.post("/giftboxes", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -323,7 +352,7 @@ app.post("/contact", async (req, res) => {
 });
 
 
-app.put("/sweets/:id", async (req, res) => {
+app.put("/sweets/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -392,7 +421,7 @@ app.put("/sweets/:id", async (req, res) => {
 
 });
 
-app.put("/namkeen/:id", async (req, res) => {
+app.put("/namkeen/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -461,7 +490,7 @@ app.put("/namkeen/:id", async (req, res) => {
 
 });
 
-app.put("/giftboxes/:id", async (req, res) => {
+app.put("/giftboxes/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -530,7 +559,7 @@ app.put("/giftboxes/:id", async (req, res) => {
 
 });
 
-app.delete("/sweets/:id", async (req, res) => {
+app.delete("/sweets/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -551,7 +580,7 @@ app.delete("/sweets/:id", async (req, res) => {
 
 });
 
-app.delete("/namkeen/:id", async (req, res) => {
+app.delete("/namkeen/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -572,7 +601,7 @@ app.delete("/namkeen/:id", async (req, res) => {
 
 });
 
-app.delete("/giftboxes/:id", async (req, res) => {
+app.delete("/giftboxes/:id", authorizeAdmin, async (req, res) => {
 
   try {
 
@@ -592,6 +621,14 @@ app.delete("/giftboxes/:id", async (req, res) => {
   }
 
 });
+
+app.get("/admin/verify", authorizeAdmin, (req, res) => {
+  res.json({
+    success: true,
+    admin: true
+  });
+});
+
 app.post("/login", (req, res) => {
 
   const { password } = req.body;
@@ -659,7 +696,7 @@ app.get("/test-chat", async (req, res) => {
 
 });
 
-app.get("/fix-images", async (req, res) => {
+app.get("/fix-images", authorizeAdmin, async (req, res) => {
 
   try {
 
